@@ -337,6 +337,8 @@ class PSTracker(object):
     """
     Tracker module for PS
     """
+    # 아래 init함수로 실제로 인스턴스화. 이는 개별 인스턴스의 구체적인 멤버 변수 설정할 수 있게함. 이를 생성자라 함.
+    # 클래스의 생성자
     def __init__(self, hostIP, cmd, port=9091, port_end=9999, envs=None):
         """
         Starts the PS scheduler
@@ -366,12 +368,14 @@ class PSTracker(object):
             target=(lambda: subprocess.check_call(self.cmd, env=env, shell=True, executable='/bin/bash')), args=())
         self.thread.setDaemon(True)
         self.thread.start()
-
+    
+    # 클래스의 메소드
     def join(self):
         if self.cmd is not None:
             while self.thread.isAlive():
                 self.thread.join(100)
-
+    
+    # 클래스의 메소드
     def slave_envs(self):
         if self.cmd is None:
             return {}
@@ -379,11 +383,15 @@ class PSTracker(object):
             return {'DMLC_PS_ROOT_URI': self.hostIP,
                     'DMLC_PS_ROOT_PORT': self.port}
 
+    # 클래스의 메소드
     def alive(self):
         if self.cmd is not None:
             return self.thread.isAlive()
         else:
             return False
+
+    # setter메소드는 멤버 변수의 값을 바꾸는 함수임. 즉, 인자로 클래스에서 생성자에서 인자로 들어가는 값이나 인스턴스가 들어가야함.
+    # 메소드나 setter 메소드는 첫번째 인자로 self가 들어가야함.
 
 
 def get_host_ip(hostIP=None):
@@ -431,6 +439,7 @@ def submit(nworker, nserver, fun_submit, hostIP='auto', pscmd=None):
         rabit.join()
     else:
         pserver.join()
+        # 이런식으로 클래스의 인스턴스에 온점을 이용하여 클래스의 메소드를 이용할 수 있다.
 
 def start_rabit_tracker(args):
     """Standalone function to start rabit tracker.
