@@ -440,6 +440,7 @@ def submit(nworker, nserver, fun_submit, hostIP='auto', pscmd=None):
     else:
         pserver.join()
         # 이런식으로 클래스의 인스턴스에 온점을 이용하여 클래스의 메소드를 이용할 수 있다.
+        #ㅇㄹㅁㅇㄴㄹㅁㅇㄹㅇㄴㄹ 
 
 def start_rabit_tracker(args):
     """Standalone function to start rabit tracker.
