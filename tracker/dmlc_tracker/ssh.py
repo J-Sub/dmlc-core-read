@@ -40,7 +40,7 @@ def submit(args):
     with open(args.host_file) as f:
         tmp = f.readlines()
     assert len(tmp) > 0
-    hosts=[]
+    hosts=[]        # 배열
     for h in tmp:
         if len(h.strip()) > 0:
             # parse addresses of the form ip:port

@@ -337,13 +337,19 @@ class PSTracker(object):
     """
     Tracker module for PS
     """
-    # 아래 init함수로 실제로 인스턴스화. 이는 개별 인스턴스의 구체적인 멤버 변수 설정할 수 있게함. 이를 생성자라 함.
+    # 아래 init함수로 실제로 클래스의 객체를 인스턴스화. 이는 개별 인스턴스의 구체적인 멤버 변수 설정할 수 있게함. 이를 생성자라 함.
+    # 인스턴스화라 함은 객체를 만드는 것이고, 그 객체는 컴퓨터 내에서 실행시킬 수 있는 실행파일임
+    # 클래스 내부 정의된 함수는 첫번째 인자가 반드시 self.
+    # self는 생성되는 인스턴스 그 자체를 의미. 다른 곳에서 이 클래스를 부를 때 어떤 이름이 올지 모르므로 self
     # 클래스의 생성자
     def __init__(self, hostIP, cmd, port=9091, port_end=9999, envs=None):
         """
         Starts the PS scheduler
         """
         self.cmd = cmd
+        # self는 self.변수명 과 같은 형태를 띠는 변수를 인스턴스 변수라고 함.
+        # 인스턴스 변수는 클래스 인스턴스 내부의 변수 의미
+        # 따라서 self.cmd 라는 표현은 나중에 생성될 클래스 인스턴스 내의 cmd 변수를 의미한다.
         if cmd is None:
             return
         envs = {} if envs is None else envs
@@ -357,7 +363,7 @@ class PSTracker(object):
                 break
             except socket.error:
                 continue
-        env = os.environ.copy()
+        env = os.environ.copy() # 환경변수 copy
 
         env['DMLC_ROLE'] = 'scheduler'
         env['DMLC_PS_ROOT_URI'] = str(self.hostIP)
@@ -420,8 +426,8 @@ def submit(nworker, nserver, fun_submit, hostIP='auto', pscmd=None):
         pscmd = None
 
     envs = {'DMLC_NUM_WORKER' : nworker,
-            'DMLC_NUM_SERVER' : nserver}
-    hostIP = get_host_ip(hostIP)
+            'DMLC_NUM_SERVER' : nserver}    # envs 초기화??
+    hostIP = get_host_ip(hostIP)        # 소켓 열어서 자기 IP 가져오는 것
 
     if nserver == 0:
         rabit = RabitTracker(hostIP=hostIP, nslave=nworker)
@@ -430,7 +436,7 @@ def submit(nworker, nserver, fun_submit, hostIP='auto', pscmd=None):
         if rabit.alive():
            fun_submit(nworker, nserver, envs)
     else:
-        pserver = PSTracker(hostIP=hostIP, cmd=pscmd, envs=envs)
+        pserver = PSTracker(hostIP=hostIP, cmd=pscmd, envs=envs)    # pserver는 PSTracker 클래스의 인스턴스. 따라서 클래스 내 메소드 사용 가능
         envs.update(pserver.slave_envs())
         if pserver.alive():
             fun_submit(nworker, nserver, envs)
