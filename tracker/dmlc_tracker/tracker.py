@@ -376,12 +376,14 @@ class PSTracker(object):
         self.thread.start()
     
     # 클래스의 메소드
+    # join 메소드는 
     def join(self):
         if self.cmd is not None:
             while self.thread.isAlive():
                 self.thread.join(100)
     
     # 클래스의 메소드
+    # 수행할 명령문이 없는 경우 
     def slave_envs(self):
         if self.cmd is None:
             return {}
@@ -426,8 +428,8 @@ def submit(nworker, nserver, fun_submit, hostIP='auto', pscmd=None):
         pscmd = None
 
     envs = {'DMLC_NUM_WORKER' : nworker,
-            'DMLC_NUM_SERVER' : nserver}    # envs 초기화??
-    hostIP = get_host_ip(hostIP)        # 소켓 열어서 자기 IP 가져오는 것
+            'DMLC_NUM_SERVER' : nserver}    # envs 딕셔너리 초기화
+    hostIP = get_host_ip(hostIP)        # 소켓 열어서 자기 IP 가져오는 것(문자열 형태)
 
     if nserver == 0:
         rabit = RabitTracker(hostIP=hostIP, nslave=nworker)
@@ -438,6 +440,7 @@ def submit(nworker, nserver, fun_submit, hostIP='auto', pscmd=None):
     else:
         pserver = PSTracker(hostIP=hostIP, cmd=pscmd, envs=envs)    # pserver는 PSTracker 클래스의 인스턴스. 따라서 클래스 내 메소드 사용 가능
         envs.update(pserver.slave_envs())
+        # PS 서버의 트래커 
         if pserver.alive():
             fun_submit(nworker, nserver, envs)
 

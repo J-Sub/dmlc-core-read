@@ -72,9 +72,7 @@ def submit(args):
             # return 값이 0인 경우 그대로 return
             # 그게 아니면 CalledProcessError raise
             # 인자가 shell이 참임. shell을 통해서 커맨드를 수행한다는 것.
-
             # 그럼 prog는 무엇일까???
-
 
 
         # sync programs if necessary
@@ -122,3 +120,7 @@ def submit(args):
                    fun_submit=ssh_submit,
                    pscmd=(' '.join(args.command)),
                    hostIP=args.host_ip)
+    # 2, 1
+    # 위에서 정의된 ssh_submit
+    # ' '.join(list) : 앞서 launch에서 보내진 args.command는 리스트 형태. 이를 문자열로 변환한다.
+    # 호스트 ip.
