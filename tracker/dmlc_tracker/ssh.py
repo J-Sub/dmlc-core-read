@@ -58,7 +58,7 @@ def submit(args):
                 p = h[i+1:]
                 h = h[:i]
             # hosts now contain the pair ip, port
-            hosts.append((h, p))
+            hosts.append((h, p))    # 포트는 22가 들어감
 
     def ssh_submit(nworker, nserver, pass_envs):
         """
@@ -89,10 +89,13 @@ def submit(args):
             
 
         # launch jobs
-        for i in range(nworker + nserver):      # i = 0, 1, 2 (total 3이므로)
+        for i in range(nworker + nserver):      # (total 3)
             pass_envs['DMLC_ROLE'] = 'server' if i < nserver else 'worker'
             # 첫번째 DMLC_ROLE 의 값은 server. 한번 iteration 이후 worker
-            (node, port) = hosts[i % len(hosts)]        # <- 뭔지 모르겠는데, hosts 배열에서 특정 값을 나누어서 지정한 듯
+            (node, port) = hosts[i % len(hosts)]   
+            # 아까 submit 함수에서 hosts를 (h,p)로 정의했고, 여기서 반복문을 통해 순차적으로 노드와 포트를 지정함.
+            # 그런데 이런식이면 host_file에서 맨 앞을 server, 나머지한테 client로 지정하는 방식인데.. 그냥 지정안하고 하는듯함
+            # 포트는 항상 22
             pass_envs['DMLC_NODE_HOST'] = node
             prog = get_env(pass_envs) + ' cd ' + working_dir + '; ' + (' '.join(args.command))
             prog = 'ssh -o StrictHostKeyChecking=no ' + node + ' -p ' + port + ' \'' + prog + '\''

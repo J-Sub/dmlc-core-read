@@ -355,7 +355,7 @@ class PSTracker(object):
         envs = {} if envs is None else envs
         self.hostIP = hostIP
         sock = socket.socket(get_family(hostIP), socket.SOCK_STREAM)
-        for port in range(port, port_end):
+        for port in range(port, port_end):  # 포트9091~9999 범주 내에서 연결 수립
             try:
                 sock.bind(('', port))
                 self.port = port
@@ -372,6 +372,7 @@ class PSTracker(object):
             env[k] = str(v)
         self.thread = Thread(
             target=(lambda: subprocess.check_call(self.cmd, env=env, shell=True, executable='/bin/bash')), args=())
+            # subprocess.check_call()는 서브 프로세스를 하나 만들되, 반드시 성공해야 하는 경우 check_call을 쓴다고 함
         self.thread.setDaemon(True)
         self.thread.start()
     
@@ -443,7 +444,7 @@ def submit(nworker, nserver, fun_submit, hostIP='auto', pscmd=None):
         # PS 서버의 트래커 
         if pserver.alive():
             fun_submit(nworker, nserver, envs)
-
+            # 현재 envs에는 DMLC 워커, 서버 수, DMLC_PS_ROOT의 ip, 포트 정보가 담겨있음.
     if nserver == 0:
         rabit.join()
     else:
