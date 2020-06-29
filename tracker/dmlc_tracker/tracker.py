@@ -372,7 +372,7 @@ class PSTracker(object):
             env[k] = str(v)
         self.thread = Thread(
             target=(lambda: subprocess.check_call(self.cmd, env=env, shell=True, executable='/bin/bash')), args=())
-            # subprocess.check_call()는 서브 프로세스를 하나 만들되, 반드시 성공해야 하는 경우 check_call을 쓴다고 함
+            # subprocess.check_call()는 서브 프로세스를 하나 만들되, 반드시 성공해야 하는 경우 check_call을 쓴다.
         self.thread.setDaemon(True)
         self.thread.start()
     
